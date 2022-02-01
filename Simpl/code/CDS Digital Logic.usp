@@ -7,7 +7,7 @@ Dealer Name:
 System Name:
 System Number:
 Programmer:		Andy Ross
-Comments:		Module to load Serial values and store updates to/from the CrestronDataStore
+Comments:		Module to load analog values and store updates to/from the CrestronDataStore
 */
 
 /*******************************************************************************************
@@ -51,18 +51,20 @@ Comments:		Module to load Serial values and store updates to/from the CrestronDa
   DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
   (Uncomment and declare inputs and outputs as needed)
 *******************************************************************************************/
-DIGITAL_INPUT 	Initialize;
+DIGITAL_INPUT 	Initialize,
+				SetValue[MAX_PROPERTIES],
+				DefaultValue[MAX_PROPERTIES];
 
-// ANALOG_INPUT 
-STRING_INPUT 	SetValue[MAX_PROPERTIES][255],
-				Tag[MAX_PROPERTIES][255],
-				DefaultValue[MAX_PROPERTIES][255];
-		
+
+// ANALOG_INPUT 	
+				
+STRING_INPUT 	Tag[MAX_PROPERTIES][255];
+						
 // BUFFER_INPUT 
 
-// DIGITAL_OUTPUT 
+DIGITAL_OUTPUT _SKIP_,Value[MAX_PROPERTIES];
 // ANALOG_OUTPUT 
-STRING_OUTPUT 	_SKIP_,Value[MAX_PROPERTIES];
+// STRING_OUTPUT 	
 
 
 
@@ -76,7 +78,8 @@ STRING_OUTPUT 	_SKIP_,Value[MAX_PROPERTIES];
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
-STRING _valueCache[MAX_PROPERTIES][255];
+// STRING 
+INTEGER _valueCache[MAX_PROPERTIES];
      
 CDSInterface cdsInterface;
 /*******************************************************************************************
@@ -90,26 +93,26 @@ Integer_Function IsValidTag( string tag )
 	return( ( Len( tag ) > 0 ) && ( tag <> " " ) );
 }
 
-Function UpdatePropertyValueFeedback( integer index, string propertyValue )
+Function UpdatePropertyValueFeedback( integer index, integer propertyValue )
 {
 	if( index > 0 && index <= MAX_PROPERTIES )
 	{
-		#IF_DEFINED DEBUG PRINT( "\nUpdatePropertyValueFeedback(): Updating Property at index %d with value %s", index, propertyValue ); #ENDIF
+		#IF_DEFINED DEBUG PRINT( "\nUpdatePropertyValueFeedback(): Updating Property at index %d with value %d", index, propertyValue ); #ENDIF
 
 	 	_valueCache[index] = propertyValue;
 		Value[index] = propertyValue; 
 	}
 }
 
-Function SaveValueToCDS( string tag, integer index, string value )
+Function SaveValueToCDS( string tag, integer index, integer value )
 {
 	Integer error;
     
 	try
 	{
-		#IF_DEFINED DEBUG PRINT( "\nSaveValutToCDS(): Saving value at index %d, with tag %s, value %s", index, tag, value ); #ENDIF
+		#IF_DEFINED DEBUG PRINT( "\nSaveValutToCDS(): Saving value at index %d, with tag %s, value %d", index, tag, value ); #ENDIF
 
-		cdsInterface.SetLocalStringValue( tag, index, value );
+		cdsInterface.SetLocalBoolValue( tag, index, value );
 	}
 	catch
 	{
@@ -118,7 +121,7 @@ Function SaveValueToCDS( string tag, integer index, string value )
 }
 
 
-EventHandler CDSValueChanged( string tag, integer index, string newValue )
+EventHandler CDSValueChanged( string tag, integer index, integer newValue )
 {
    	UpdatePropertyValueFeedback( index, newValue );
 }
@@ -130,7 +133,7 @@ EventHandler CDSValueChanged( string tag, integer index, string newValue )
 PUSH Initialize
 {
 	Integer index, error, lookupFailed;
-	string propertyValue[255];
+	integer propertyValue;
       
 	#IF_DEFINED DEBUG PRINT( "\nPUSH Initialize: Initializing CDS Data" ); #ENDIF
 
@@ -145,7 +148,7 @@ PUSH Initialize
 			try
 			{
 
-	         	propertyValue = cdsInterface.GetLocalStringValue( Tag[index]);
+	         	propertyValue = cdsInterface.GetLocalUintValue( Tag[index]);
     		}
 			catch
 			{
@@ -158,7 +161,7 @@ PUSH Initialize
 			{
              	if( IsSignalDefined( DefaultValue[ index ] ) )
 				{
-					#IF_DEFINED DEBUG PRINT( "\nPUSH Initialized: Saving Default value %s for tag %s", DefaultValue[index], Tag[index] ); #ENDIF
+					#IF_DEFINED DEBUG PRINT( "\nPUSH Initialized: Saving Default value %d for tag %s", DefaultValue[index], Tag[index] ); #ENDIF
 
                 	SaveValueToCDS( Tag[index], index, DefaultValue[index] );
 					UpdatePropertyValueFeedback( index, DefaultValue[index] );
@@ -185,7 +188,7 @@ CHANGE SetValue
  	Integer index;
 	index = getLastModifiedArrayIndex( );
      
-	#IF_DEFINED DEBUG PRINT( "\nCHANGE SetValue: index = %d, value = %s", index, SetValue[index] ); #ENDIF
+	#IF_DEFINED DEBUG PRINT( "\nCHANGE SetValue: index = %d, value = %d", index, SetValue[index] ); #ENDIF
 
 	// if the value  changes and there is a valid tag, save the new value to the CrestronDataStore     
 	if( IsSignalDefined( Tag[index] ) && IsValidTag( Tag[index] )  )

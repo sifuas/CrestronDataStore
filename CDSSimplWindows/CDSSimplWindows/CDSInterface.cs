@@ -31,7 +31,11 @@ namespace CDSSimplWindows
         /// </summary>
         public CDSInterface()
         {
-            CrestronDataStoreStatic.InitCrestronDataStore();
+            var error = CrestronDataStoreStatic.InitCrestronDataStore();
+            if (error != CrestronDataStore.CDS_ERROR.CDS_SUCCESS)
+            {
+                CrestronConsole.PrintLine("CDSInterface() : Error = {0}", error);
+            }            
         }
 
         /// <summary>
