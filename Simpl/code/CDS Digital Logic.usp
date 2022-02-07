@@ -7,7 +7,7 @@ Dealer Name:
 System Name:
 System Number:
 Programmer:		Andy Ross
-Comments:		Module to load analog values and store updates to/from the CrestronDataStore
+Comments:		Module to load digital values and store updates to/from the CrestronDataStore
 */
 
 /*******************************************************************************************
@@ -52,7 +52,9 @@ Comments:		Module to load analog values and store updates to/from the CrestronDa
   (Uncomment and declare inputs and outputs as needed)
 *******************************************************************************************/
 DIGITAL_INPUT 	Initialize,
-				SetValue[MAX_PROPERTIES],
+				ToggleValue[MAX_PROPERTIES],
+				ValueOn[MAX_PROPERTIES],
+				ValueOff[MAX_PROPERTIES],
 				DefaultValue[MAX_PROPERTIES];
 
 
@@ -147,8 +149,7 @@ PUSH Initialize
                          
 			try
 			{
-
-	         	propertyValue = cdsInterface.GetLocalUintValue( Tag[index]);
+	         	propertyValue = cdsInterface.GetLocalBoolValue(Tag[index]);
     		}
 			catch
 			{
@@ -183,24 +184,54 @@ PUSH Initialize
 	}
 }
 
-CHANGE SetValue
+PUSH ToggleValue
 {
  	Integer index;
 	index = getLastModifiedArrayIndex( );
      
-	#IF_DEFINED DEBUG PRINT( "\nCHANGE SetValue: index = %d, value = %d", index, SetValue[index] ); #ENDIF
+	#IF_DEFINED DEBUG PRINT( "\nPUSH ToggleValue: index = %d, value = %d", index, ToggleValue[index] ); #ENDIF
 
 	// if the value  changes and there is a valid tag, save the new value to the CrestronDataStore     
 	if( IsSignalDefined( Tag[index] ) && IsValidTag( Tag[index] )  )
 	{
-		// if the value is different than what has already been cached
-   		if( _valueCache[index] <> SetValue[index] )
-		{
-     		SaveValueToCDS( Tag[index], index, SetValue[index] );   	
-		}	  	
-	}     
-                                                   
+	     _valueCache[index] = !_valueCache[index];
+   		SaveValueToCDS( Tag[index], index, _valueCache[index] );   
+		UpdatePropertyValueFeedback( index, _valueCache[index] );
+	}                                                        
 }
+
+PUSH ValueOn
+{
+ 	Integer index;
+	index = getLastModifiedArrayIndex( );
+     
+	#IF_DEFINED DEBUG PRINT( "\nPUSH ValueOn: index = %d, value = %d", index, ToggleValue[index] ); #ENDIF
+
+	// if the value  changes and there is a valid tag, save the new value to the CrestronDataStore     
+	if( IsSignalDefined( Tag[index] ) && IsValidTag( Tag[index] )  )
+	{
+	     _valueCache[index] = 1;
+   		SaveValueToCDS( Tag[index], index, _valueCache[index] );  
+		UpdatePropertyValueFeedback( index, _valueCache[index] ); 	
+	}    
+}
+
+PUSH ValueOff
+{
+ 	Integer index;
+	index = getLastModifiedArrayIndex( );
+     
+	#IF_DEFINED DEBUG PRINT( "\nPUSH ValueOff: index = %d, value = %d", index, ToggleValue[index] ); #ENDIF
+
+	// if the value  changes and there is a valid tag, save the new value to the CrestronDataStore     
+	if( IsSignalDefined( Tag[index] ) && IsValidTag( Tag[index] )  )
+	{
+	     _valueCache[index] = 0;
+   		SaveValueToCDS( Tag[index], index, _valueCache[index] ); 
+		UpdatePropertyValueFeedback( index, _valueCache[index] );  	
+	} 
+}
+
 /*******************************************************************************************
   Main()
   Uncomment and place one-time startup code here
