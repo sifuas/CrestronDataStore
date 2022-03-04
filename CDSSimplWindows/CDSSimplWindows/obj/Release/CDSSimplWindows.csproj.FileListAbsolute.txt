@@ -1,6 +1,0 @@
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\bin\Release\CDSSimplWindows.dll
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\bin\Release\SimplSharpCustomAttributesInterface.dll
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\bin\Release\SimplSharpHelperInterface.dll
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\bin\Release\Newtonsoft.Json.Compact.dll
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\obj\Release\ResolveAssemblyReference.cache
-C:\Users\andy\Documents\GitHub\CrestronDataStore\CDSSimplWindows\CDSSimplWindows\obj\Release\CDSSimplWindows.dll
