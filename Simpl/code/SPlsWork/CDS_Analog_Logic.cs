@@ -27,7 +27,7 @@ namespace UserModule_CDS_ANALOG_LOGIC
         private ushort ISVALIDTAG (  SplusExecutionContext __context__, CrestronString TAG ) 
             { 
             
-            __context__.SourceCodeLine = 91;
+            __context__.SourceCodeLine = 111;
             return (ushort)( Functions.BoolToInt ( (Functions.TestForTrue ( Functions.BoolToInt ( Functions.Length( TAG ) > 0 ) ) && Functions.TestForTrue ( Functions.BoolToInt (TAG != " ") )) )) ; 
             
             }
@@ -35,14 +35,14 @@ namespace UserModule_CDS_ANALOG_LOGIC
         private void UPDATEPROPERTYVALUEFEEDBACK (  SplusExecutionContext __context__, ushort INDEX , ushort PROPERTYVALUE ) 
             { 
             
-            __context__.SourceCodeLine = 96;
+            __context__.SourceCodeLine = 116;
             if ( Functions.TestForTrue  ( ( Functions.BoolToInt ( (Functions.TestForTrue ( Functions.BoolToInt ( INDEX > 0 ) ) && Functions.TestForTrue ( Functions.BoolToInt ( INDEX <= 100 ) )) ))  ) ) 
                 { 
-                __context__.SourceCodeLine = 98;
+                __context__.SourceCodeLine = 118;
                 
-                __context__.SourceCodeLine = 100;
+                __context__.SourceCodeLine = 120;
                 _VALUECACHE [ INDEX] = (ushort) ( PROPERTYVALUE ) ; 
-                __context__.SourceCodeLine = 101;
+                __context__.SourceCodeLine = 121;
                 VALUE [ INDEX]  .Value = (ushort) ( PROPERTYVALUE ) ; 
                 } 
             
@@ -54,12 +54,12 @@ namespace UserModule_CDS_ANALOG_LOGIC
             ushort ERROR = 0;
             
             
-            __context__.SourceCodeLine = 109;
+            __context__.SourceCodeLine = 129;
             try 
                 { 
-                __context__.SourceCodeLine = 111;
+                __context__.SourceCodeLine = 131;
                 
-                __context__.SourceCodeLine = 113;
+                __context__.SourceCodeLine = 133;
                 CDSINTERFACE . SetLocalUintValue ( TAG .ToString(), (uint)( INDEX ), (uint)( VALUE )) ; 
                 } 
             
@@ -80,7 +80,7 @@ namespace UserModule_CDS_ANALOG_LOGIC
                 {
                     SplusExecutionContext __context__ = SplusSimplSharpDelegateThreadStartCode();
                     
-                    __context__.SourceCodeLine = 124;
+                    __context__.SourceCodeLine = 144;
                     UPDATEPROPERTYVALUEFEEDBACK (  __context__ , (ushort)( INDEX ), (ushort)( NEWVALUE )) ; 
                     
                     
@@ -102,25 +102,25 @@ namespace UserModule_CDS_ANALOG_LOGIC
                     ushort PROPERTYVALUE = 0;
                     
                     
-                    __context__.SourceCodeLine = 136;
+                    __context__.SourceCodeLine = 156;
                     
-                    __context__.SourceCodeLine = 138;
+                    __context__.SourceCodeLine = 158;
                     ushort __FN_FORSTART_VAL__1 = (ushort) ( 1 ) ;
                     ushort __FN_FOREND_VAL__1 = (ushort)100; 
                     int __FN_FORSTEP_VAL__1 = (int)1; 
                     for ( INDEX  = __FN_FORSTART_VAL__1; (__FN_FORSTEP_VAL__1 > 0)  ? ( (INDEX  >= __FN_FORSTART_VAL__1) && (INDEX  <= __FN_FOREND_VAL__1) ) : ( (INDEX  <= __FN_FORSTART_VAL__1) && (INDEX  >= __FN_FOREND_VAL__1) ) ; INDEX  += (ushort)__FN_FORSTEP_VAL__1) 
                         { 
-                        __context__.SourceCodeLine = 140;
+                        __context__.SourceCodeLine = 160;
                         LOOKUPFAILED = (ushort) ( 0 ) ; 
-                        __context__.SourceCodeLine = 142;
+                        __context__.SourceCodeLine = 162;
                         if ( Functions.TestForTrue  ( ( Functions.BoolToInt ( (Functions.TestForTrue ( Functions.BoolToInt ( (Functions.TestForTrue ( IsSignalDefined( TAG[ INDEX ] ) ) && Functions.TestForTrue ( ISVALIDTAG( __context__ , TAG[ INDEX ] ) )) ) ) && Functions.TestForTrue ( IsSignalDefined( VALUE[ INDEX ] ) )) ))  ) ) 
                             { 
-                            __context__.SourceCodeLine = 144;
+                            __context__.SourceCodeLine = 164;
                             
-                            __context__.SourceCodeLine = 146;
+                            __context__.SourceCodeLine = 166;
                             try 
                                 { 
-                                __context__.SourceCodeLine = 149;
+                                __context__.SourceCodeLine = 169;
                                 PROPERTYVALUE = (ushort) ( CDSINTERFACE.GetLocalUintValue( TAG[ INDEX ] .ToString() ) ) ; 
                                 } 
                             
@@ -128,28 +128,28 @@ namespace UserModule_CDS_ANALOG_LOGIC
                                 { 
                                 SimplPlusException __splus_exceptionobj__ = new SimplPlusException(__splus_exception__, this );
                                 
-                                __context__.SourceCodeLine = 154;
+                                __context__.SourceCodeLine = 174;
                                 LOOKUPFAILED = (ushort) ( 1 ) ; 
                                 
                                 }
                                 
-                                __context__.SourceCodeLine = 158;
+                                __context__.SourceCodeLine = 178;
                                 if ( Functions.TestForTrue  ( ( Functions.BoolToInt (LOOKUPFAILED == 1))  ) ) 
                                     { 
-                                    __context__.SourceCodeLine = 160;
+                                    __context__.SourceCodeLine = 180;
                                     if ( Functions.TestForTrue  ( ( IsSignalDefined( DEFAULTVALUE[ INDEX ] ))  ) ) 
                                         { 
-                                        __context__.SourceCodeLine = 162;
+                                        __context__.SourceCodeLine = 182;
                                         
-                                        __context__.SourceCodeLine = 164;
+                                        __context__.SourceCodeLine = 184;
                                         SAVEVALUETOCDS (  __context__ , TAG[ INDEX ], (ushort)( INDEX ), (ushort)( DEFAULTVALUE[ INDEX ] .UshortValue )) ; 
-                                        __context__.SourceCodeLine = 165;
+                                        __context__.SourceCodeLine = 185;
                                         UPDATEPROPERTYVALUEFEEDBACK (  __context__ , (ushort)( INDEX ), (ushort)( DEFAULTVALUE[ INDEX ] .UshortValue )) ; 
                                         } 
                                     
                                     else 
                                         { 
-                                        __context__.SourceCodeLine = 169;
+                                        __context__.SourceCodeLine = 189;
                                         Print( "\r\nNo default value set for Tag {0}", TAG [ INDEX ] ) ; 
                                         } 
                                     
@@ -157,7 +157,7 @@ namespace UserModule_CDS_ANALOG_LOGIC
                                 
                                 else 
                                     { 
-                                    __context__.SourceCodeLine = 174;
+                                    __context__.SourceCodeLine = 194;
                                     UPDATEPROPERTYVALUEFEEDBACK (  __context__ , (ushort)( INDEX ), (ushort)( PROPERTYVALUE )) ; 
                                     } 
                                 
@@ -165,11 +165,11 @@ namespace UserModule_CDS_ANALOG_LOGIC
                             
                             else 
                                 { 
-                                __context__.SourceCodeLine = 179;
+                                __context__.SourceCodeLine = 199;
                                 Print( "\r\nInvalid Tag for propery at index {0:d}", (short)INDEX) ; 
                                 } 
                             
-                            __context__.SourceCodeLine = 138;
+                            __context__.SourceCodeLine = 158;
                             } 
                         
                         
@@ -191,17 +191,17 @@ namespace UserModule_CDS_ANALOG_LOGIC
                     ushort INDEX = 0;
                     
                     
-                    __context__.SourceCodeLine = 187;
+                    __context__.SourceCodeLine = 207;
                     INDEX = (ushort) ( Functions.GetLastModifiedArrayIndex( __SignalEventArg__ ) ) ; 
-                    __context__.SourceCodeLine = 189;
+                    __context__.SourceCodeLine = 209;
                     
-                    __context__.SourceCodeLine = 192;
+                    __context__.SourceCodeLine = 212;
                     if ( Functions.TestForTrue  ( ( Functions.BoolToInt ( (Functions.TestForTrue ( IsSignalDefined( TAG[ INDEX ] ) ) && Functions.TestForTrue ( ISVALIDTAG( __context__ , TAG[ INDEX ] ) )) ))  ) ) 
                         { 
-                        __context__.SourceCodeLine = 195;
+                        __context__.SourceCodeLine = 215;
                         if ( Functions.TestForTrue  ( ( Functions.BoolToInt (_VALUECACHE[ INDEX ] != SETVALUE[ INDEX ] .UshortValue))  ) ) 
                             { 
-                            __context__.SourceCodeLine = 197;
+                            __context__.SourceCodeLine = 217;
                             SAVEVALUETOCDS (  __context__ , TAG[ INDEX ], (ushort)( INDEX ), (ushort)( SETVALUE[ INDEX ] .UshortValue )) ; 
                             } 
                         
@@ -222,7 +222,7 @@ namespace UserModule_CDS_ANALOG_LOGIC
             {
                 SplusExecutionContext __context__ = SplusFunctionMainStartCode();
                 
-                __context__.SourceCodeLine = 210;
+                __context__.SourceCodeLine = 230;
                 Functions.SetArray (  ref _VALUECACHE , (ushort)0) ; 
                 
                 
@@ -235,6 +235,8 @@ namespace UserModule_CDS_ANALOG_LOGIC
         
         public override void LogosSplusInitialize()
         {
+            SocketInfo __socketinfo__ = new SocketInfo( 1, this );
+            InitialParametersClass.ResolveHostName = __socketinfo__.ResolveHostName;
             _SplusNVRAM = new SplusNVRAM( this );
             _VALUECACHE  = new ushort[ 101 ];
             
